@@ -1,16 +1,18 @@
-
 import { Briefcase, User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import JobPortalCard from '@/components/JobPortalCard';
 
 const Index = () => {
+  const navigate = useNavigate();
+
   const handleEmployerClick = () => {
     console.log('صاحب عمل clicked');
-    // TODO: Navigate to employer dashboard
+    navigate('/employer');
   };
 
   const handleJobSeekerClick = () => {
     console.log('يبحث عن عمل clicked');
-    // TODO: Navigate to job seeker dashboard
+    navigate('/job-seeker');
   };
 
   return (
