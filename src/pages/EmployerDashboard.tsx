@@ -1,10 +1,24 @@
 
+import { useState } from 'react';
 import { Plus, Search, Users, Briefcase } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import EmployerForm from '@/components/EmployerForm';
+import JobForm from '@/components/JobForm';
 
 const EmployerDashboard = () => {
+  const [showJobForm, setShowJobForm] = useState(false);
+
+  if (showJobForm) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50" dir="rtl">
+        <main className="container mx-auto px-4 py-8">
+          <JobForm onBack={() => setShowJobForm(false)} />
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50" dir="rtl">
       {/* Header */}
@@ -12,7 +26,10 @@ const EmployerDashboard = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold text-gray-800">لوحة تحكم صاحب العمل</h1>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button 
+              className="bg-blue-600 hover:bg-blue-700"
+              onClick={() => setShowJobForm(true)}
+            >
               <Plus className="ml-2 h-4 w-4" />
               إضافة وظيفة جديدة
             </Button>
