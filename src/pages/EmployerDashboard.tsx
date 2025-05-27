@@ -2,6 +2,7 @@
 import { Plus, Search, Users, Briefcase } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import EmployerForm from '@/components/EmployerForm';
 
 const EmployerDashboard = () => {
   return (
@@ -21,6 +22,11 @@ const EmployerDashboard = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
+        {/* Employer Form Section */}
+        <div className="mb-8">
+          <EmployerForm />
+        </div>
+
         {/* Stats Cards */}
         <div className="grid md:grid-cols-3 gap-6 mb-8">
           <Card>
