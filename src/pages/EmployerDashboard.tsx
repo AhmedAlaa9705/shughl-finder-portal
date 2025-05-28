@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import EmployerForm from '@/components/EmployerForm';
 import JobForm from '@/components/JobForm';
+import Logo from '@/components/Logo';
 
 const EmployerDashboard = () => {
   const [showJobForm, setShowJobForm] = useState(false);
@@ -26,22 +27,25 @@ const EmployerDashboard = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold text-gray-800">لوحة تحكم صاحب العمل</h1>
-            <div className="flex items-center gap-3">
-              <Button variant="outline" size="sm">
-                <LogIn className="ml-2 h-4 w-4" />
-                تسجيل الدخول
-              </Button>
-              <Button variant="outline" size="sm">
-                <UserPlus className="ml-2 h-4 w-4" />
-                حساب جديد
-              </Button>
-              <Button 
-                className="bg-blue-600 hover:bg-blue-700"
-                onClick={() => setShowJobForm(true)}
-              >
-                <Plus className="ml-2 h-4 w-4" />
-                إضافة وظيفة جديدة
-              </Button>
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-3">
+                <Button variant="outline" size="sm">
+                  <LogIn className="ml-2 h-4 w-4" />
+                  تسجيل الدخول
+                </Button>
+                <Button variant="outline" size="sm">
+                  <UserPlus className="ml-2 h-4 w-4" />
+                  حساب جديد
+                </Button>
+                <Button 
+                  className="bg-blue-600 hover:bg-blue-700"
+                  onClick={() => setShowJobForm(true)}
+                >
+                  <Plus className="ml-2 h-4 w-4" />
+                  إضافة وظيفة جديدة
+                </Button>
+              </div>
+              <Logo />
             </div>
           </div>
         </div>

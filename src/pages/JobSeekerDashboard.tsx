@@ -4,6 +4,7 @@ import { Search, FileText, Star, MapPin, LogIn, UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import JobSeekerForm from '@/components/JobSeekerForm';
+import Logo from '@/components/Logo';
 
 const JobSeekerDashboard = () => {
   const [showForm, setShowForm] = useState(true);
@@ -23,19 +24,22 @@ const JobSeekerDashboard = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold text-gray-800">لوحة تحكم الباحث عن عمل</h1>
-            <div className="flex items-center gap-3">
-              <Button variant="outline" size="sm">
-                <LogIn className="ml-2 h-4 w-4" />
-                تسجيل الدخول
-              </Button>
-              <Button variant="outline" size="sm">
-                <UserPlus className="ml-2 h-4 w-4" />
-                حساب جديد
-              </Button>
-              <Button className="bg-green-600 hover:bg-green-700">
-                <Search className="ml-2 h-4 w-4" />
-                البحث عن وظائف
-              </Button>
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-3">
+                <Button variant="outline" size="sm">
+                  <LogIn className="ml-2 h-4 w-4" />
+                  تسجيل الدخول
+                </Button>
+                <Button variant="outline" size="sm">
+                  <UserPlus className="ml-2 h-4 w-4" />
+                  حساب جديد
+                </Button>
+                <Button className="bg-green-600 hover:bg-green-700">
+                  <Search className="ml-2 h-4 w-4" />
+                  البحث عن وظائف
+                </Button>
+              </div>
+              <Logo />
             </div>
           </div>
         </div>
