@@ -5,7 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowRight, Car } from 'lucide-react';
+import { ArrowRight, Car, Route } from 'lucide-react';
+import RouteMapModal from './RouteMapModal';
+
+interface RoutePoint {
+  lng: number;
+  lat: number;
+  name: string;
+}
 
 interface JobSeekerFormProps {
   onComplete: () => void;
@@ -20,6 +27,9 @@ const JobSeekerForm = ({ onComplete }: JobSeekerFormProps) => {
     carBrand: '',
     carModel: ''
   });
+
+  const [routePoints, setRoutePoints] = useState<RoutePoint[]>([]);
+  const [isMapModalOpen, setIsMapModalOpen] = useState(false);
 
   const carTypes = [
     'ملاكى سيدان',
@@ -38,6 +48,7 @@ const JobSeekerForm = ({ onComplete }: JobSeekerFormProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('بيانات الباحث عن عمل:', formData);
+    console.log('نقاط المسار الثابت:', routePoints);
     onComplete();
   };
 
@@ -46,6 +57,11 @@ const JobSeekerForm = ({ onComplete }: JobSeekerFormProps) => {
       ...prev,
       [field]: value
     }));
+  };
+
+  const handleSaveRoute = (points: RoutePoint[]) => {
+    setRoutePoints(points);
+    console.log('تم حفظ نقاط المسار:', points);
   };
 
   return (
@@ -147,6 +163,41 @@ const JobSeekerForm = ({ onComplete }: JobSeekerFormProps) => {
               />
             </div>
 
+            {/* خط السير الثابت */}
+            <div className="space-y-2">
+              <Label>خط السير الثابت</Label>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => setIsMapModalOpen(true)}
+                >
+                  <Route className="ml-2 h-4 w-4" />
+                  تحديد خط السير على الخريطة
+                </Button>
+                {routePoints.length > 0 && (
+                  <div className="flex items-center px-3 py-2 bg-green-50 border border-green-200 rounded-md">
+                    <span className="text-sm text-green-700">
+                      {routePoints.length} نقطة محددة
+                    </span>
+                  </div>
+                )}
+              </div>
+              {routePoints.length > 0 && (
+                <div className="mt-2 p-3 bg-gray-50 rounded-md">
+                  <p className="text-sm font-medium text-gray-700 mb-2">نقاط المسار:</p>
+                  <div className="space-y-1">
+                    {routePoints.map((point, index) => (
+                      <div key={index} className="text-xs text-gray-600">
+                        {index + 1}. {point.name} ({point.lat.toFixed(4)}, {point.lng.toFixed(4)})
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
             {/* زر الإرسال */}
             <Button 
               type="submit" 
@@ -159,6 +210,13 @@ const JobSeekerForm = ({ onComplete }: JobSeekerFormProps) => {
           </form>
         </CardContent>
       </Card>
+
+      <RouteMapModal
+        isOpen={isMapModalOpen}
+        onClose={() => setIsMapModalOpen(false)}
+        onSave={handleSaveRoute}
+        initialPoints={routePoints}
+      />
     </div>
   );
 };
