@@ -1,9 +1,21 @@
 
+import { useState } from 'react';
 import { Search, FileText, Star, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import JobSeekerForm from '@/components/JobSeekerForm';
 
 const JobSeekerDashboard = () => {
+  const [showForm, setShowForm] = useState(true);
+
+  const handleFormComplete = () => {
+    setShowForm(false);
+  };
+
+  if (showForm) {
+    return <JobSeekerForm onComplete={handleFormComplete} />;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-green-50" dir="rtl">
       {/* Header */}
