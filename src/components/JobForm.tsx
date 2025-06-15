@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 
 interface JobFormData {
   carType: string;
+  carSubType: string;
   carModel: string;
   carCount: string;
   workHoursFrom: string;
@@ -35,6 +35,7 @@ interface JobFormProps {
 const JobForm = ({ onBack }: JobFormProps) => {
   const [formData, setFormData] = useState<JobFormData>({
     carType: '',
+    carSubType: '',
     carModel: '',
     carCount: '',
     workHoursFrom: '',
@@ -55,10 +56,51 @@ const JobForm = ({ onBack }: JobFormProps) => {
   const [showJobPosting, setShowJobPosting] = useState(false);
   const { toast } = useToast();
 
+  const getCarSubTypeOptions = (carType: string) => {
+    switch (carType) {
+      case 'ملاكي':
+        return [
+          { value: 'سيدان', label: 'سيدان' },
+          { value: 'SUV', label: 'SUV' },
+          { value: '7 راكب', label: '7 راكب' },
+          { value: 'جميع ما سبق مقبول', label: 'جميع ما سبق مقبول' }
+        ];
+      case 'دوبل':
+        return [
+          { value: 'دوبل صغير', label: 'دوبل صغير' },
+          { value: 'دوبل كبير', label: 'دوبل كبير' },
+          { value: 'جميع ما سبق مقبول', label: 'جميع ما سبق مقبول' }
+        ];
+      case 'ربع نقل':
+        return [
+          { value: 'ربع نقل مفتوح', label: 'ربع نقل مفتوح' },
+          { value: 'ربع نقل مغطى', label: 'ربع نقل مغطى' },
+          { value: 'جميع ما سبق مقبول', label: 'جميع ما سبق مقبول' }
+        ];
+      case 'نصف نقل':
+        return [
+          { value: 'نصف نقل مفتوح', label: 'نصف نقل مفتوح' },
+          { value: 'نصف نقل مغطى', label: 'نصف نقل مغطى' },
+          { value: 'جميع ما سبق مقبول', label: 'جميع ما سبق مقبول' }
+        ];
+      case 'أتوبيس':
+        return [
+          { value: 'ميكروباص', label: 'ميكروباص' },
+          { value: 'أتوبيس متوسط', label: 'أتوبيس متوسط' },
+          { value: 'أتوبيس كبير', label: 'أتوبيس كبير' },
+          { value: 'جميع ما سبق مقبول', label: 'جميع ما سبق مقبول' }
+        ];
+      default:
+        return [];
+    }
+  };
+
   const handleInputChange = (field: keyof JobFormData, value: string) => {
     setFormData(prev => ({
       ...prev,
-      [field]: value
+      [field]: value,
+      // Reset carSubType when carType changes
+      ...(field === 'carType' && { carSubType: '' })
     }));
   };
 
@@ -103,7 +145,8 @@ const JobForm = ({ onBack }: JobFormProps) => {
       <CardContent>
         <div className="text-lg leading-relaxed text-right">
           <p>
-            مطلوب سيارة {formData.carType} عدد {formData.carCount}
+            مطلوب سيارة {formData.carType} 
+            {formData.carSubType && ` (${formData.carSubType})`} عدد {formData.carCount}
             {formData.carModel && ` موديلات من ${formData.carModel}`}
           </p>
           <p>
@@ -168,6 +211,25 @@ const JobForm = ({ onBack }: JobFormProps) => {
                   </SelectContent>
                 </Select>
               </div>
+
+              {/* Car Sub Type - appears after selecting main car type */}
+              {formData.carType && getCarSubTypeOptions(formData.carType).length > 0 && (
+                <div className="space-y-2">
+                  <Label htmlFor="carSubType">تحديد نوع السيارة</Label>
+                  <Select value={formData.carSubType} onValueChange={(value) => handleInputChange('carSubType', value)}>
+                    <SelectTrigger className="text-right">
+                      <SelectValue placeholder="اختر التفصيل" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {getCarSubTypeOptions(formData.carType).map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
 
               <div className="space-y-2">
                 <Label htmlFor="carModel">الموديل (اختياري)</Label>
