@@ -1,10 +1,10 @@
 
 import { useState } from 'react';
-import { Search, FileText, Star, MapPin, LogIn, UserPlus } from 'lucide-react';
+import { Search, FileText, Star, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import JobSeekerForm from '@/components/JobSeekerForm';
-import Logo from '@/components/Logo';
+import ResponsiveNavbar from '@/components/ResponsiveNavbar';
 
 const JobSeekerDashboard = () => {
   const [showForm, setShowForm] = useState(true);
@@ -19,36 +19,20 @@ const JobSeekerDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-green-50" dir="rtl">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-gray-800">لوحة تحكم الباحث عن عمل</h1>
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-3">
-                <Button variant="outline" size="sm">
-                  <LogIn className="ml-2 h-4 w-4" />
-                  تسجيل الدخول
-                </Button>
-                <Button variant="outline" size="sm">
-                  <UserPlus className="ml-2 h-4 w-4" />
-                  حساب جديد
-                </Button>
-                <Button className="bg-green-600 hover:bg-green-700">
-                  <Search className="ml-2 h-4 w-4" />
-                  البحث عن وظائف
-                </Button>
-              </div>
-              <Logo />
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* Responsive Header */}
+      <ResponsiveNavbar 
+        title="لوحة تحكم الباحث عن عمل"
+        primaryAction={{
+          label: "البحث عن وظائف",
+          icon: <Search className="ml-2 h-4 w-4" />,
+          onClick: () => console.log('البحث عن وظائف clicked')
+        }}
+      />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {/* Profile Stats */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">الطلبات المرسلة</CardTitle>
@@ -90,7 +74,7 @@ const JobSeekerDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between p-4 border rounded-lg hover:bg-gray-50 gap-4">
                 <div className="flex-1">
                   <h3 className="font-semibold">مطور React</h3>
                   <p className="text-sm text-gray-600 flex items-center mt-1">
@@ -99,10 +83,10 @@ const JobSeekerDashboard = () => {
                   </p>
                   <p className="text-sm text-green-600 mt-1">5000 - 7000 ريال</p>
                 </div>
-                <Button size="sm">التقدم للوظيفة</Button>
+                <Button size="sm" className="w-full lg:w-auto">التقدم للوظيفة</Button>
               </div>
               
-              <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between p-4 border rounded-lg hover:bg-gray-50 gap-4">
                 <div className="flex-1">
                   <h3 className="font-semibold">مصمم واجهات مستخدم</h3>
                   <p className="text-sm text-gray-600 flex items-center mt-1">
@@ -111,10 +95,10 @@ const JobSeekerDashboard = () => {
                   </p>
                   <p className="text-sm text-green-600 mt-1">4000 - 6000 ريال</p>
                 </div>
-                <Button size="sm">التقدم للوظيفة</Button>
+                <Button size="sm" className="w-full lg:w-auto">التقدم للوظيفة</Button>
               </div>
 
-              <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between p-4 border rounded-lg hover:bg-gray-50 gap-4">
                 <div className="flex-1">
                   <h3 className="font-semibold">محلل بيانات</h3>
                   <p className="text-sm text-gray-600 flex items-center mt-1">
@@ -123,7 +107,7 @@ const JobSeekerDashboard = () => {
                   </p>
                   <p className="text-sm text-green-600 mt-1">6000 - 8000 ريال</p>
                 </div>
-                <Button size="sm">التقدم للوظيفة</Button>
+                <Button size="sm" className="w-full lg:w-auto">التقدم للوظيفة</Button>
               </div>
             </div>
           </CardContent>

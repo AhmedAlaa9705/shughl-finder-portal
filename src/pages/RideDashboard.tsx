@@ -4,7 +4,7 @@ import { Car, Users, Clock, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import RideForm from '@/components/RideForm';
-import Logo from '@/components/Logo';
+import ResponsiveNavbar from '@/components/ResponsiveNavbar';
 
 const RideDashboard = () => {
   const [showRideForm, setShowRideForm] = useState(true);
@@ -21,31 +21,20 @@ const RideDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-orange-50" dir="rtl">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-gray-800">لوحة تحكم الباحث عن دورة</h1>
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-3">
-                <Button 
-                  className="bg-orange-600 hover:bg-orange-700"
-                  onClick={() => setShowRideForm(true)}
-                >
-                  <Car className="ml-2 h-4 w-4" />
-                  طلب دورة جديدة
-                </Button>
-              </div>
-              <Logo />
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* Responsive Header */}
+      <ResponsiveNavbar 
+        title="لوحة تحكم الباحث عن دورة"
+        primaryAction={{
+          label: "طلب دورة جديدة",
+          icon: <Car className="ml-2 h-4 w-4" />,
+          onClick: () => setShowRideForm(true)
+        }}
+      />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {/* Stats Cards */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">طلبات الدورات</CardTitle>
@@ -87,7 +76,7 @@ const RideDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 border rounded-lg">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-4">
                 <div>
                   <h3 className="font-semibold flex items-center gap-2">
                     <MapPin className="h-4 w-4" />
@@ -95,10 +84,10 @@ const RideDashboard = () => {
                   </h3>
                   <p className="text-sm text-gray-600">ذهاب وعودة • 6 أيام العمل • 7:30 ص</p>
                 </div>
-                <Button variant="outline" size="sm">عرض التفاصيل</Button>
+                <Button variant="outline" size="sm" className="w-full sm:w-auto">عرض التفاصيل</Button>
               </div>
               
-              <div className="flex items-center justify-between p-4 border rounded-lg">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-4">
                 <div>
                   <h3 className="font-semibold flex items-center gap-2">
                     <MapPin className="h-4 w-4" />
@@ -106,7 +95,7 @@ const RideDashboard = () => {
                   </h3>
                   <p className="text-sm text-gray-600">ذهاب فقط • 5 أيام العمل • 8:00 ص</p>
                 </div>
-                <Button variant="outline" size="sm">عرض التفاصيل</Button>
+                <Button variant="outline" size="sm" className="w-full sm:w-auto">عرض التفاصيل</Button>
               </div>
             </div>
           </CardContent>

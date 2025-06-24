@@ -1,11 +1,11 @@
 
 import { useState } from 'react';
-import { Plus, Search, Users, Briefcase, LogIn, UserPlus } from 'lucide-react';
+import { Plus, Search, Users, Briefcase } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import EmployerForm from '@/components/EmployerForm';
 import JobForm from '@/components/JobForm';
-import Logo from '@/components/Logo';
+import ResponsiveNavbar from '@/components/ResponsiveNavbar';
 
 const EmployerDashboard = () => {
   const [showJobForm, setShowJobForm] = useState(false);
@@ -22,34 +22,15 @@ const EmployerDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50" dir="rtl">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-gray-800">لوحة تحكم صاحب العمل</h1>
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-3">
-                <Button variant="outline" size="sm">
-                  <LogIn className="ml-2 h-4 w-4" />
-                  تسجيل الدخول
-                </Button>
-                <Button variant="outline" size="sm">
-                  <UserPlus className="ml-2 h-4 w-4" />
-                  حساب جديد
-                </Button>
-                <Button 
-                  className="bg-blue-600 hover:bg-blue-700"
-                  onClick={() => setShowJobForm(true)}
-                >
-                  <Plus className="ml-2 h-4 w-4" />
-                  إضافة وظيفة جديدة
-                </Button>
-              </div>
-              <Logo />
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* Responsive Header */}
+      <ResponsiveNavbar 
+        title="لوحة تحكم صاحب العمل"
+        primaryAction={{
+          label: "إضافة وظيفة جديدة",
+          icon: <Plus className="ml-2 h-4 w-4" />,
+          onClick: () => setShowJobForm(true)
+        }}
+      />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
@@ -59,7 +40,7 @@ const EmployerDashboard = () => {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">الوظائف المنشورة</CardTitle>
@@ -101,20 +82,20 @@ const EmployerDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 border rounded-lg">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-4">
                 <div>
                   <h3 className="font-semibold">مطور ويب متقدم</h3>
                   <p className="text-sm text-gray-600">منشورة منذ يومين • 15 متقدم</p>
                 </div>
-                <Button variant="outline" size="sm">عرض التفاصيل</Button>
+                <Button variant="outline" size="sm" className="w-full sm:w-auto">عرض التفاصيل</Button>
               </div>
               
-              <div className="flex items-center justify-between p-4 border rounded-lg">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-4">
                 <div>
                   <h3 className="font-semibold">مصمم جرافيك</h3>
                   <p className="text-sm text-gray-600">منشورة منذ أسبوع • 8 متقدمين</p>
                 </div>
-                <Button variant="outline" size="sm">عرض التفاصيل</Button>
+                <Button variant="outline" size="sm" className="w-full sm:w-auto">عرض التفاصيل</Button>
               </div>
             </div>
           </CardContent>
