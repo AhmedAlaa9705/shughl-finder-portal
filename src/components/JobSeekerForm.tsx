@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -7,6 +7,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowRight, Car, Route } from 'lucide-react';
 import RouteMapModal from './RouteMapModal';
+import axios from 'axios';
+import { date } from 'zod';
 
 interface RoutePoint {
   lng: number;
@@ -21,9 +23,9 @@ interface JobSeekerFormProps {
 const JobSeekerForm = ({ onComplete }: JobSeekerFormProps) => {
   const [formData, setFormData] = useState({
     name: '',
-    phone: '',
-    carCount: '',
-    carType: '',
+    phoneNumber: '',
+    carCount: 0,
+    carTypeId: 0,
     carBrand: '',
     carModel: ''
   });
@@ -31,25 +33,70 @@ const JobSeekerForm = ({ onComplete }: JobSeekerFormProps) => {
   const [routePoints, setRoutePoints] = useState<RoutePoint[]>([]);
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
 
-  const carTypes = [
-    'ملاكى سيدان',
-    'ملاكى 7 راكب',
-    'ربع نقل',
-    'نص نقل',
-    'دوبل كابينه',
-    'ميكروباص',
-    'ميكروباص سقف عالى',
-    'ميكروباص وسط',
-    'مينى باص',
-    'باص',
-    'مينى فان'
-  ];
+let [carTypeServer,setcarTypeServer]=useState([]);
+  // const carTypes = [
 
-  const handleSubmit = (e: React.FormEvent) => {
+  //   'ملاكى سيدان',
+  //   'ملاكى 7 راكب',
+  //   'ربع نقل',
+  //   'نص نقل',
+  //   'دوبل كابينه',
+  //   'ميكروباص',
+  //   'ميكروباص سقف عالى',
+  //   'ميكروباص وسط',
+  //   'مينى باص',
+  //   'باص',
+  //   'مينى فان'
+  // ];
+
+
+
+  
+
+  useEffect(() => {
+   axios.get('https://localhost:44381/api/CarTypes/AllCarsTypes')
+      .then(response => {
+        setcarTypeServer([...response.data]);
+      })
+      .catch(error => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+
+
+
+
+ 
+  const handleSubmit =async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('بيانات الباحث عن عمل:', formData);
-    console.log('نقاط المسار الثابت:', routePoints);
-    onComplete();
+const url='https://localhost:44381/api/JobSeekers/';
+ console.log('بيانات الباحث عن عمل:', formData);
+
+// const res =await axios.post(url+'Insert',formData);
+
+// if(res.data=="added"){
+//  console.log('بيانات الباحث عن عمل:', formData);
+//     console.log('نقاط المسار الثابت:', routePoints);
+//     onComplete();
+// }
+
+axios.post(url+'Insert',formData).then(response => {
+    console.log('Success:', response.data);
+    console.log('data:', formData);
+  onComplete();
+
+  })
+  .catch(error => {
+    if (error.response) {
+      console.log('Error Response:', error.response.data); // 👈 هنا التفاصيل المهمة
+    } else {
+      console.log('Unknown Error:', error.message);
+    }
+  });
+
+
+   
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -95,13 +142,13 @@ const JobSeekerForm = ({ onComplete }: JobSeekerFormProps) => {
 
             {/* رقم التليفون */}
             <div className="space-y-2">
-              <Label htmlFor="phone">رقم التليفون</Label>
+              <Label htmlFor="phoneNumber">رقم التليفون</Label>
               <Input
-                id="phone"
+                id="phoneNumber"
                 type="tel"
                 placeholder="أدخل رقم التليفون"
-                value={formData.phone}
-                onChange={(e) => handleInputChange('phone', e.target.value)}
+                value={formData.phoneNumber}
+                onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
                 required
               />
             </div>
@@ -122,15 +169,15 @@ const JobSeekerForm = ({ onComplete }: JobSeekerFormProps) => {
 
             {/* نوع السيارة */}
             <div className="space-y-2">
-              <Label htmlFor="carType">نوع السيارة</Label>
-              <Select value={formData.carType} onValueChange={(value) => handleInputChange('carType', value)}>
+              <Label htmlFor="carTypeId">نوع السيارة</Label>
+              <Select value={formData.carTypeId.toString()} onValueChange={(value) => handleInputChange('carTypeId',value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="اختر نوع السيارة" />
                 </SelectTrigger>
                 <SelectContent>
-                  {carTypes.map((type) => (
-                    <SelectItem key={type} value={type}>
-                      {type}
+                  {carTypeServer.map((type) => (
+                    <SelectItem key={type.id} value={type.id.toString()}>
+                      {type.carType}
                     </SelectItem>
                   ))}
                 </SelectContent>

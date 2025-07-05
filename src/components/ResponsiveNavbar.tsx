@@ -21,10 +21,10 @@ const ResponsiveNavbar = ({ title, primaryAction }: ResponsiveNavbarProps) => {
   };
 
   return (
-    <header className="bg-white shadow-sm border-b">
+    <header className="bg-black shadow-sm border-b">
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
-          <h1 className="text-xl md:text-2xl font-bold text-gray-800">{title}</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-gray-800"> <Logo /> </h1>
           
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-6">
@@ -40,19 +40,19 @@ const ResponsiveNavbar = ({ title, primaryAction }: ResponsiveNavbarProps) => {
               <Button 
                 className={primaryAction.label.includes('عمل') ? 'bg-blue-600 hover:bg-blue-700' : 
                           primaryAction.label.includes('وظائف') ? 'bg-green-600 hover:bg-green-700' : 
-                          'bg-orange-600 hover:bg-orange-700'}
+                          'bg-blue-600 hover:bg-blue-700'}
                 onClick={primaryAction.onClick}
               >
                 {primaryAction.icon}
                 {primaryAction.label}
               </Button>
             </div>
-            <Logo />
+          
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="lg:hidden flex items-center gap-2">
-            <Logo />
+          <div className="lg:hidden text-white flex items-center gap-2">
+            {/* <Logo /> */}
             <Button
               variant="ghost"
               size="sm"
@@ -90,7 +90,7 @@ const ResponsiveNavbar = ({ title, primaryAction }: ResponsiveNavbarProps) => {
                 className={`justify-start ${
                   primaryAction.label.includes('عمل') ? 'bg-blue-600 hover:bg-blue-700' : 
                   primaryAction.label.includes('وظائف') ? 'bg-green-600 hover:bg-green-700' : 
-                  'bg-orange-600 hover:bg-orange-700'
+                  'bg-blue-600 hover:bg-blue-700'
                 }`}
                 onClick={() => {
                   primaryAction.onClick();

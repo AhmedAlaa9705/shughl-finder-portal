@@ -9,8 +9,8 @@ const Logo = () => {
         <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full"></div>
       </div>
       <div className="text-right">
-        <h2 className="text-lg font-bold text-gray-800">كار رنت</h2>
-        <p className="text-xs text-gray-600">خدمات النقل والمشاوير</p>
+        <h2 className="text-lg font-bold text-white text-gray-800">كار رنت</h2>
+        <p className="text-xs text-gray-600 text-white">خدمات النقل والمشاوير</p>
       </div>
     </div>
   );

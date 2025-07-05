@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,12 +7,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
+import axios from 'axios';
 
 interface JobFormData {
   carType: string;
   carSubType: string;
   carModel: string;
-  carCount: string;
+  carCount: number;
   workHoursFrom: string;
   workHoursTo: string;
   governorate: string;
@@ -37,7 +38,7 @@ const JobForm = ({ onBack }: JobFormProps) => {
     carType: '',
     carSubType: '',
     carModel: '',
-    carCount: '',
+    carCount: 0,
     workHoursFrom: '',
     workHoursTo: '',
     governorate: '',
@@ -45,7 +46,7 @@ const JobForm = ({ onBack }: JobFormProps) => {
     dailyKilometers: '',
     workNature: '',
     fixedRoute: '',
-    paymentFrequency: '',
+    paymentFrequency: 'Daily',
     paymentIncludes: [],
     paymentDay: '',
     paymentMethod: '',
@@ -54,51 +55,95 @@ const JobForm = ({ onBack }: JobFormProps) => {
   });
 
   const [showJobPosting, setShowJobPosting] = useState(false);
+  const [workNatures, setWorkNatures] = useState([]);
+  const [carTypes, setCartypes] = useState([]);
+  const [carSubTypes, setCarSubTypes] = useState([]);
+
+  const [selectedCarType, setSelectedCarType] = useState('');
+const [carTypeId, setCarTypeId] = useState<number | null>(null);
+
   const { toast } = useToast();
 
-  const getCarSubTypeOptions = (carType: string) => {
-    switch (carType) {
-      case 'ملاكي':
-        return [
-          { value: 'سيدان', label: 'سيدان' },
-          { value: 'SUV', label: 'SUV' },
-          { value: '7 راكب', label: '7 راكب' },
-          { value: 'جميع ما سبق مقبول', label: 'جميع ما سبق مقبول' }
-        ];
-      case 'دوبل':
-        return [
-          { value: 'دوبل صغير', label: 'دوبل صغير' },
-          { value: 'دوبل كبير', label: 'دوبل كبير' },
-          { value: 'جميع ما سبق مقبول', label: 'جميع ما سبق مقبول' }
-        ];
-      case 'ربع نقل':
-        return [
-          { value: 'ربع نقل مفتوح', label: 'ربع نقل مفتوح' },
-          { value: 'ربع نقل مغطى', label: 'ربع نقل مغطى' },
-          { value: 'جميع ما سبق مقبول', label: 'جميع ما سبق مقبول' }
-        ];
-      case 'نصف نقل':
-        return [
-          { value: 'نصف نقل مفتوح', label: 'نصف نقل مفتوح' },
-          { value: 'نصف نقل مغطى', label: 'نصف نقل مغطى' },
-          { value: 'جميع ما سبق مقبول', label: 'جميع ما سبق مقبول' }
-        ];
-      case 'أتوبيس':
-        return [
-          { value: 'ميكروباص', label: 'ميكروباص' },
-          { value: 'أتوبيس متوسط', label: 'أتوبيس متوسط' },
-          { value: 'أتوبيس كبير', label: 'أتوبيس كبير' },
-          { value: 'جميع ما سبق مقبول', label: 'جميع ما سبق مقبول' }
-        ];
-      default:
-        return [];
-    }
-  };
+
+useEffect(()=>{
+axios.get('https://localhost:44381/api/WorkNature/GetWorks').then(response=>{
+  setWorkNatures([...response.data]);
+}).catch(error=>{
+        console.error("why this error:", error);
+});
+},[]);
+
+
+useEffect(()=>{
+
+axios.get('https://localhost:44381/api/CarTypes/AllCarsTypes').then(res=>{
+  setCartypes([...res.data]);
+}).catch(error=>{
+        console.error("why this error:", error);
+
+});
+
+
+},[]);
+
+
+
+console.log("changrd",formData.carType);
+console.log("charg",selectedCarType);
+
+const getSubs=(id)=>{
+console.log("fromFunctin",id);
+
+axios.get(`https://localhost:44381/api/CarTypes/CarsbySubCar?id=${id}`).then(res=>{
+  setCarSubTypes([...res.data]);
+}).catch(error=>{
+        console.error("why this error habbend:", error);
+      
+
+});
+
+
+return [...carSubTypes];
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // const getCarSubTypeOptions = (carType: number) => {
+  //   debugger;
+  //   switch (carType) {
+  //     case 1:
+  //       return GetSub(carType);
+  //     case 2:
+  //       return GetSub(carType);
+  //     case 3:
+  //       return GetSub(carType);
+  //     case 4:
+  //       return GetSub(carType);
+  //     case 5:
+  //       return GetSub(carType);
+  //     default:
+  //       return [];
+  //   }
+  // };
+
+
 
   const handleInputChange = (field: keyof JobFormData, value: string) => {
+ 
     setFormData(prev => ({
       ...prev,
       [field]: value,
+      
       // Reset carSubType when carType changes
       ...(field === 'carType' && { carSubType: '' })
     }));
@@ -115,7 +160,7 @@ const JobForm = ({ onBack }: JobFormProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+    const url='https://localhost:44381/api/Companies/';
     if (!formData.carType || !formData.carCount || !formData.workHoursFrom || 
         !formData.workHoursTo || !formData.governorate || !formData.city ||
         !formData.dailyKilometers || !formData.workNature || !formData.paymentFrequency ||
@@ -129,12 +174,24 @@ const JobForm = ({ onBack }: JobFormProps) => {
     }
 
     console.log('Job form data:', formData);
-    setShowJobPosting(true);
-    
-    toast({
+
+    axios.post(url+'AddJob',formData).then(response=>{
+        toast({
       title: "تم إنشاء الإعلان بنجاح",
       description: "تم إنشاء إعلان الوظيفة بنجاح"
     });
+    console.log("s",response);
+    setShowJobPosting(true);
+
+    }).catch(error=>{
+        console.error("Error fetching data:", error);
+
+    })
+    
+
+
+
+  
   };
 
   const JobPosting = () => (
@@ -198,22 +255,25 @@ const JobForm = ({ onBack }: JobFormProps) => {
               
               <div className="space-y-2">
                 <Label htmlFor="carType">نوع السيارة المطلوبة *</Label>
-                <Select value={formData.carType} onValueChange={(value) => handleInputChange('carType', value)}>
+                <Select value={formData.carType}  onValueChange={(value) =>{
+                 handleInputChange('carType', value);
+                 setSelectedCarType(value);}}>
                   <SelectTrigger className="text-right">
                     <SelectValue placeholder="اختر نوع السيارة" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="دوبل">دوبل</SelectItem>
-                    <SelectItem value="ربع نقل">ربع نقل</SelectItem>
-                    <SelectItem value="نصف نقل">نصف نقل</SelectItem>
-                    <SelectItem value="ملاكي">ملاكي</SelectItem>
-                    <SelectItem value="أتوبيس">أتوبيس</SelectItem>
+                    {carTypes.map((item)=>(
+                    <SelectItem key={item.id} value={item.id.toString()}>{item.carType}</SelectItem>
+
+
+                    ))}
+                   
                   </SelectContent>
                 </Select>
               </div>
 
               {/* Car Sub Type - appears after selecting main car type */}
-              {formData.carType && getCarSubTypeOptions(formData.carType).length > 0 && (
+              {formData.carType && getSubs(formData.carType).length > 0 && (
                 <div className="space-y-2">
                   <Label htmlFor="carSubType">تحديد نوع السيارة</Label>
                   <Select value={formData.carSubType} onValueChange={(value) => handleInputChange('carSubType', value)}>
@@ -221,9 +281,9 @@ const JobForm = ({ onBack }: JobFormProps) => {
                       <SelectValue placeholder="اختر التفصيل" />
                     </SelectTrigger>
                     <SelectContent>
-                      {getCarSubTypeOptions(formData.carType).map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
+                      {carSubTypes.map((option) => (
+                        <SelectItem key={option.id} value={option.id.toString()}>
+                          {option.cartype}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -236,7 +296,7 @@ const JobForm = ({ onBack }: JobFormProps) => {
                 <Input
                   id="carModel"
                   value={formData.carModel}
-                  onChange={(e) => handleInputChange('carModel', e.target.value)}
+                  onChange={(e) => handleInputChange('carModel',e.target.value)}
                   placeholder="مثال: 2020 أو أحدث"
                   className="text-right"
                 />
@@ -248,7 +308,7 @@ const JobForm = ({ onBack }: JobFormProps) => {
                   id="carCount"
                   type="number"
                   value={formData.carCount}
-                  onChange={(e) => handleInputChange('carCount', e.target.value)}
+                  onChange={(e) => handleInputChange('carCount',e.target.value)}
                   placeholder="1"
                   className="text-right"
                 />
@@ -266,7 +326,7 @@ const JobForm = ({ onBack }: JobFormProps) => {
                     id="workHoursFrom"
                     type="time"
                     value={formData.workHoursFrom}
-                    onChange={(e) => handleInputChange('workHoursFrom', e.target.value)}
+                    onChange={(e) => handleInputChange('workHoursFrom', e.target.value+':00')}
                     className="text-right"
                   />
                 </div>
@@ -276,7 +336,7 @@ const JobForm = ({ onBack }: JobFormProps) => {
                     id="workHoursTo"
                     type="time"
                     value={formData.workHoursTo}
-                    onChange={(e) => handleInputChange('workHoursTo', e.target.value)}
+                    onChange={(e) => handleInputChange('workHoursTo', e.target.value+':00')}
                     className="text-right"
                   />
                 </div>
@@ -307,7 +367,7 @@ const JobForm = ({ onBack }: JobFormProps) => {
 
               <div className="space-y-2">
                 <Label htmlFor="dailyKilometers">عدد الكيلومترات اليومية *</Label>
-                <Select value={formData.dailyKilometers} onValueChange={(value) => handleInputChange('dailyKilometers', value)}>
+                <Select value={formData.dailyKilometers} onValueChange={(value) => handleInputChange('dailyKilometers',value)}>
                   <SelectTrigger className="text-right">
                     <SelectValue placeholder="اختر المسافة" />
                   </SelectTrigger>
@@ -328,10 +388,13 @@ const JobForm = ({ onBack }: JobFormProps) => {
                     <SelectValue placeholder="اختر طبيعة العمل" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="دورات">دورات</SelectItem>
-                    <SelectItem value="خدمة موقع">خدمة موقع</SelectItem>
+                    {workNatures.map((item)=>(
+                    <SelectItem key={item.id} value={item.id.toString()}>{item.title}</SelectItem>
+                      
+                    ))}
+                    {/* <SelectItem value="خدمة موقع">خدمة موقع</SelectItem>
                     <SelectItem value="مشاوير خارجية">مشاوير خارجية</SelectItem>
-                    <SelectItem value="مشاوير متنوعة">مشاوير متنوعة</SelectItem>
+                    <SelectItem value="مشاوير متنوعة">مشاوير متنوعة</SelectItem> */}
                   </SelectContent>
                 </Select>
               </div>
@@ -341,7 +404,7 @@ const JobForm = ({ onBack }: JobFormProps) => {
                 <Textarea
                   id="fixedRoute"
                   value={formData.fixedRoute}
-                  onChange={(e) => handleInputChange('fixedRoute', e.target.value)}
+                  onChange={(e) => handleInputChange('fixedRoute',e.target.value)}
                   placeholder="مثال: نقطة أ - نقطة ب - نقطة ج"
                   className="text-right"
                   rows={3}
@@ -362,12 +425,12 @@ const JobForm = ({ onBack }: JobFormProps) => {
                 className="flex gap-6"
               >
                 <div className="flex items-center space-x-2 space-x-reverse">
-                  <RadioGroupItem value="يومي" id="daily" />
-                  <Label htmlFor="daily">يومي</Label>
+                  <RadioGroupItem value="Daily" id="Daily" />
+                  <Label htmlFor="Daily">يومي</Label>
                 </div>
                 <div className="flex items-center space-x-2 space-x-reverse">
-                  <RadioGroupItem value="شهري" id="monthly" />
-                  <Label htmlFor="monthly">شهري (الحساب في آخر الشهر)</Label>
+                  <RadioGroupItem value="Monthly" id="monthly" />
+                  <Label htmlFor="Monthly">شهري (الحساب في آخر الشهر)</Label>
                 </div>
               </RadioGroup>
             </div>

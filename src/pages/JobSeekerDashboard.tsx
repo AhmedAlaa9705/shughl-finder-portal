@@ -1,10 +1,11 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Search, FileText, Star, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import JobSeekerForm from '@/components/JobSeekerForm';
 import ResponsiveNavbar from '@/components/ResponsiveNavbar';
+import axios from 'axios';
 
 const JobSeekerDashboard = () => {
   const [showForm, setShowForm] = useState(true);
@@ -12,6 +13,20 @@ const JobSeekerDashboard = () => {
   const handleFormComplete = () => {
     setShowForm(false);
   };
+
+const [getJobs,setJobs]=useState([]);
+
+useEffect(()=>{
+
+axios.get('https://localhost:44381/api/Jobs/AllJobs').then(res=>{
+  console.log("jobs", res.data);
+  setJobs(res.data);
+})
+},[])
+
+
+
+
 
   if (showForm) {
     return <JobSeekerForm onComplete={handleFormComplete} />;
@@ -74,19 +89,23 @@ const JobSeekerDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between p-4 border rounded-lg hover:bg-gray-50 gap-4">
+              {getJobs.map((item)=>(
+        <div key={item.id} className="flex flex-col lg:flex-row lg:items-center justify-between p-4 border rounded-lg hover:bg-gray-50 gap-4">
                 <div className="flex-1">
-                  <h3 className="font-semibold">مطور React</h3>
+                  <h3 className="font-semibold">مطلوب سياره:{item.carType}</h3>
                   <p className="text-sm text-gray-600 flex items-center mt-1">
                     <MapPin className="h-4 w-4 ml-1" />
-                    الرياض • شركة التقنيات المتقدمة
+                    {item.governorate} •{item.city}
                   </p>
-                  <p className="text-sm text-green-600 mt-1">5000 - 7000 ريال</p>
+                  <p className="text-sm text-green-600 mt-1">من الساعه:{item.workFrom}الي :{item.workTo}</p>
                 </div>
                 <Button size="sm" className="w-full lg:w-auto">التقدم للوظيفة</Button>
               </div>
+
+              ))}
+      
               
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between p-4 border rounded-lg hover:bg-gray-50 gap-4">
+              {/* <div className="flex flex-col lg:flex-row lg:items-center justify-between p-4 border rounded-lg hover:bg-gray-50 gap-4">
                 <div className="flex-1">
                   <h3 className="font-semibold">مصمم واجهات مستخدم</h3>
                   <p className="text-sm text-gray-600 flex items-center mt-1">
@@ -96,9 +115,9 @@ const JobSeekerDashboard = () => {
                   <p className="text-sm text-green-600 mt-1">4000 - 6000 ريال</p>
                 </div>
                 <Button size="sm" className="w-full lg:w-auto">التقدم للوظيفة</Button>
-              </div>
+              </div> */}
 
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between p-4 border rounded-lg hover:bg-gray-50 gap-4">
+              {/* <div className="flex flex-col lg:flex-row lg:items-center justify-between p-4 border rounded-lg hover:bg-gray-50 gap-4">
                 <div className="flex-1">
                   <h3 className="font-semibold">محلل بيانات</h3>
                   <p className="text-sm text-gray-600 flex items-center mt-1">
@@ -108,7 +127,7 @@ const JobSeekerDashboard = () => {
                   <p className="text-sm text-green-600 mt-1">6000 - 8000 ريال</p>
                 </div>
                 <Button size="sm" className="w-full lg:w-auto">التقدم للوظيفة</Button>
-              </div>
+              </div> */}
             </div>
           </CardContent>
         </Card>

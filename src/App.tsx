@@ -8,6 +8,7 @@ import EmployerDashboard from "./pages/EmployerDashboard";
 import JobSeekerDashboard from "./pages/JobSeekerDashboard";
 import RideDashboard from "./pages/RideDashboard";
 import NotFound from "./pages/NotFound";
+import CompanyRegister from "./pages/CompanyRegister";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/employer" element={<EmployerDashboard />} />
+          <Route path="/employer-form" element={<CompanyRegister />} />
           <Route path="/job-seeker" element={<JobSeekerDashboard />} />
           <Route path="/ride" element={<RideDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

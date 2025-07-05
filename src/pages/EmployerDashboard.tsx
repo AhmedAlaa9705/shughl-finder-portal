@@ -1,14 +1,16 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Plus, Search, Users, Briefcase } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import EmployerForm from '@/components/EmployerForm';
+// import EmployerForm from '@/components/EmployerForm';
 import JobForm from '@/components/JobForm';
 import ResponsiveNavbar from '@/components/ResponsiveNavbar';
+import axios from 'axios';
 
 const EmployerDashboard = () => {
   const [showJobForm, setShowJobForm] = useState(false);
+  const [showSeeker, setshowSeeker] = useState([]);
 
   if (showJobForm) {
     return (
@@ -19,6 +21,19 @@ const EmployerDashboard = () => {
       </div>
     );
   }
+
+
+useEffect(()=>{
+
+axios.get('https://localhost:44381/api/JobSeekers/AllSeeker').then(res=>{
+  console.log(res.data);
+  setshowSeeker(res.data);
+})
+
+
+},[])
+
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50" dir="rtl">
@@ -35,9 +50,9 @@ const EmployerDashboard = () => {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {/* Employer Form Section */}
-        <div className="mb-8">
+        {/* <div className="mb-8">
           <EmployerForm />
-        </div>
+        </div> */}
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -78,25 +93,30 @@ const EmployerDashboard = () => {
         {/* Recent Jobs */}
         <Card>
           <CardHeader>
-            <CardTitle>الوظائف الحديثة</CardTitle>
+            <CardTitle>الباحثين عن عمل</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-4">
+
+              {showSeeker.map((item)=>(
+              <div key={item.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-4">
                 <div>
-                  <h3 className="font-semibold">مطور ويب متقدم</h3>
+                  <h3 className="font-semibold">{item.carType.carType}:{item.brandCar}</h3>
                   <p className="text-sm text-gray-600">منشورة منذ يومين • 15 متقدم</p>
                 </div>
                 <Button variant="outline" size="sm" className="w-full sm:w-auto">عرض التفاصيل</Button>
               </div>
+
+              ))}
               
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-4">
+              
+              {/* <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-4">
                 <div>
                   <h3 className="font-semibold">مصمم جرافيك</h3>
                   <p className="text-sm text-gray-600">منشورة منذ أسبوع • 8 متقدمين</p>
                 </div>
                 <Button variant="outline" size="sm" className="w-full sm:w-auto">عرض التفاصيل</Button>
-              </div>
+              </div> */}
             </div>
           </CardContent>
         </Card>

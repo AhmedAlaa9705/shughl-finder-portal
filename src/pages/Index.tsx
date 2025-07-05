@@ -8,7 +8,7 @@ const Index = () => {
 
   const handleEmployerClick = () => {
     console.log('صاحب عمل clicked');
-    navigate('/employer');
+    navigate('/employer-form');
   };
 
   const handleJobSeekerClick = () => {
@@ -26,7 +26,7 @@ const Index = () => {
       {/* Header */}
       <header className="text-center pt-16 pb-8">
         <h1 className="text-5xl font-bold text-gray-800 mb-4">
-          بوابة الخدمات
+        مشاويرجي
         </h1>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto px-4">
           منصة شاملة للوظائف وخدمات النقل والمشاوير

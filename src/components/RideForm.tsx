@@ -10,18 +10,22 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ArrowRight, Clock, MapPin, Calendar } from 'lucide-react';
+import axios from 'axios';
+import { useNavigate,Navigate } from 'react-router-dom';
+
+
 
 const rideFormSchema = z.object({
   name: z.string().min(2, 'الاسم مطلوب'),
-  phone: z.string().min(10, 'رقم الهاتف مطلوب'),
-  tripType: z.enum(['oneway', 'return', 'roundtrip']),
-  governorate: z.string().min(1, 'المحافظة مطلوبة'),
-  area: z.string().min(1, 'المنطقة مطلوبة'),
+  phoneNumber: z.string().min(10, 'رقم الهاتف مطلوب'),
+  tripType: z.enum(['oneway', 'returnOnly', 'roundtrip']),
+  goverment: z.string().min(1, 'المحافظة مطلوبة'),
+  city: z.string().min(1, 'المنطقة مطلوبة'),
   locationLink: z.string().optional(),
-  pickupTime: z.string().min(1, 'موعد الإقلال مطلوب'),
-  dropoffLocation: z.string().min(1, 'مكان النزول مطلوب'),
-  dropoffTime: z.string().min(1, 'موعد النزول مطلوب'),
-  workDays: z.enum(['6days', '5days'])
+  pickupTime: z.string().min(1, 'موعد الإقلال مطلوب') .transform((val) => (val.length === 5 ? val + ':00' : val)),
+  dropLocation: z.string().min(1, 'مكان النزول مطلوب'),  
+  dropofftime: z.string().min(1, 'موعد النزول مطلوب') .transform((val) => (val.length === 5 ? val + ':00' : val)),
+  workDays: z.enum(['days6', 'days5']).optional()
 });
 
 type RideFormData = z.infer<typeof rideFormSchema>;
@@ -41,16 +45,48 @@ const RideForm = ({ onBack }: RideFormProps) => {
     resolver: zodResolver(rideFormSchema),
     defaultValues: {
       tripType: 'roundtrip',
-      workDays: '6days'
+      workDays: 'days6'
     }
   });
+const navigate=useNavigate();
 
   const tripType = watch('tripType');
   const workDays = watch('workDays');
 
-  const onSubmit = (data: RideFormData) => {
-    console.log('Ride form data:', data);
-    // Handle form submission here
+  const onSubmit =  (data: RideFormData) => {
+     const url='https://localhost:44381/api/Riders/';
+    debugger;
+
+axios.post(url+'Insert',data).then(response => {
+    console.log('Success:', response.data);
+ 
+
+
+setValue('name','');
+setValue('city','');
+setValue('phoneNumber','');
+setValue('dropLocation','');
+setValue('dropofftime','');
+setValue('goverment','');
+setValue('locationLink','');
+setValue('pickupTime','');
+
+navigate('/employer');
+
+
+
+
+  
+  })
+  .catch(error => {
+    if (error.response) {
+      console.log('Error Response:', error.response.data); // 👈 هنا التفاصيل المهمة
+    } else {
+      console.log('Unknown Error:', error.message);
+    }
+  });
+   // console.log("rs",res.data);
+    console.log(data);
   };
 
   return (
@@ -89,12 +125,12 @@ const RideForm = ({ onBack }: RideFormProps) => {
               <Label htmlFor="phone">رقم الهاتف *</Label>
               <Input
                 id="phone"
-                {...register('phone')}
+                {...register('phoneNumber')}
                 placeholder="أدخل رقم الهاتف"
                 dir="ltr"
               />
-              {errors.phone && (
-                <p className="text-sm text-red-600">{errors.phone.message}</p>
+              {errors.phoneNumber && (
+                <p className="text-sm text-red-600">{errors.phoneNumber.message}</p>
               )}
             </div>
           </div>
@@ -112,8 +148,8 @@ const RideForm = ({ onBack }: RideFormProps) => {
                 <Label htmlFor="oneway">ذهاب فقط</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="return" id="return" />
-                <Label htmlFor="return">عودة فقط</Label>
+                <RadioGroupItem value="returnOnly" id="returnOnly" />
+                <Label htmlFor="returnOnly">عودة فقط</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="roundtrip" id="roundtrip" />
@@ -133,11 +169,11 @@ const RideForm = ({ onBack }: RideFormProps) => {
                 <Label htmlFor="governorate">المحافظة *</Label>
                 <Input
                   id="governorate"
-                  {...register('governorate')}
+                  {...register('goverment')}
                   placeholder="اختر المحافظة"
                 />
-                {errors.governorate && (
-                  <p className="text-sm text-red-600">{errors.governorate.message}</p>
+                {errors.goverment && (
+                  <p className="text-sm text-red-600">{errors.goverment.message}</p>
                 )}
               </div>
               
@@ -145,11 +181,11 @@ const RideForm = ({ onBack }: RideFormProps) => {
                 <Label htmlFor="area">المنطقة *</Label>
                 <Input
                   id="area"
-                  {...register('area')}
+                  {...register('city')}
                   placeholder="اختر المنطقة"
                 />
-                {errors.area && (
-                  <p className="text-sm text-red-600">{errors.area.message}</p>
+                {errors.city && (
+                  <p className="text-sm text-red-600">{errors.city.message}</p>
                 )}
               </div>
             </div>
@@ -190,10 +226,10 @@ const RideForm = ({ onBack }: RideFormProps) => {
               <Input
                 id="dropoffTime"
                 type="time"
-                {...register('dropoffTime')}
+                {...register('dropofftime')}
               />
-              {errors.dropoffTime && (
-                <p className="text-sm text-red-600">{errors.dropoffTime.message}</p>
+              {errors.dropofftime && (
+                <p className="text-sm text-red-600">{errors.dropofftime.message}</p>
               )}
             </div>
           </div>
@@ -206,11 +242,11 @@ const RideForm = ({ onBack }: RideFormProps) => {
             </Label>
             <Input
               id="dropoffLocation"
-              {...register('dropoffLocation')}
+              {...register('dropLocation')}
               placeholder="أدخل مكان النزول"
             />
-            {errors.dropoffLocation && (
-              <p className="text-sm text-red-600">{errors.dropoffLocation.message}</p>
+            {errors.dropLocation && (
+              <p className="text-sm text-red-600">{errors.dropLocation.message}</p>
             )}
           </div>
 
@@ -226,12 +262,12 @@ const RideForm = ({ onBack }: RideFormProps) => {
               className="space-y-2"
             >
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="6days" id="6days" />
-                <Label htmlFor="6days">6 أيام (الجمعة إجازة)</Label>
+                <RadioGroupItem value="days6" id="days6" />
+                <Label htmlFor="days6">6 أيام (الجمعة إجازة)</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="5days" id="5days" />
-                <Label htmlFor="5days">5 أيام (الجمعة والسبت إجازة)</Label>
+                <RadioGroupItem value="days5" id="days5" />
+                <Label htmlFor="days5">5 أيام (الجمعة والسبت إجازة)</Label>
               </div>
             </RadioGroup>
           </div>
